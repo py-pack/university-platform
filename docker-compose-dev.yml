@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+    db:
+        image: postgres:16-alpine
+        container_name: "uni_db"
+        restart: always
+        ports:
+            - "5441:5432"
+        volumes:
+            - "./docker/db:/var/lib/postgresql/data"
+        environment:
+            TZ: ${TZ}
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        healthcheck:
+            test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}" ]
+            retries: 3
+            timeout: 5s
+        networks:
+            - custom
+
+networks:
+    custom:
+        driver: bridge
+#        internal: true
