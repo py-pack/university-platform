@@ -2,3 +2,10 @@
 .idea/
 venv/
 
+
+/docker/db
+docker-compose.yml
+
+
+.env
+
