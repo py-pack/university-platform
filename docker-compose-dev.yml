@@ -20,6 +20,25 @@ services:
             timeout: 5s
         networks:
             - custom
+    db_test:
+        image: postgres:16-alpine
+        container_name: "uni_db_test"
+        restart: always
+        ports:
+            - "5442:5432"
+        volumes:
+            - "./docker/db_test:/var/lib/postgresql/data"
+        environment:
+            TZ: ${TZ}
+            POSTGRES_DB: ${DB_DATABASE_TEST}
+            POSTGRES_USER: ${DB_USERNAME_TEST}
+            POSTGRES_PASSWORD: ${DB_PASSWORD_TEST}
+        healthcheck:
+            test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE_TEST}", "-U", "${DB_USERNAME_TEST}" ]
+            retries: 3
+            timeout: 5s
+        networks:
+            - custom
 
 networks:
     custom:
