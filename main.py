@@ -12,7 +12,7 @@ import settings
 import uuid
 import re
 
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, field_validator
 
 # Iteraction with DB
 engine = create_async_engine(settings.REAL_DATABASE_URL, future=True, echo=True)
@@ -69,7 +69,7 @@ class TunedModel(BaseModel):
 # Resource
 
 class ShowUser(TunedModel):
-    user_id = uuid.UUID
+    user_id: uuid.UUID
     name: str
     surname: str
     email: EmailStr
@@ -83,7 +83,7 @@ class UserCreate(BaseModel):
     surname: str
     email: EmailStr
 
-    @validator('name')
+    @field_validator('name')
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(
@@ -91,7 +91,7 @@ class UserCreate(BaseModel):
             )
         return value
 
-    @validator('surname')
+    @field_validator('surname')
     def validate_surname(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(
